@@ -1,4 +1,5 @@
 <script type="text/javascript">
+{% if google_analytics.hasEventQueue %}
 if (AntiMattr == null || typeof(AntiMattr) != 'object') { var AntiMattr = window.AntiMattr = {}; }
 AntiMattr.GoogleAnalytics = {};
 
@@ -23,6 +24,7 @@ AntiMattr.GoogleAnalytics.notifyEvent = function(tracker, category, action, labe
     }
     _gaq.push(event);
 };
+{% endif -%}
 
 if ( _gaq == null || typeof(_gaq) != 'array') { var _gaq = window._gaq = []; }
 
