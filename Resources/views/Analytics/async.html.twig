@@ -5,11 +5,11 @@ AntiMattr.GoogleAnalytics = {};
 
 AntiMattr.GoogleAnalytics.onGatLoad = function(callback) {
     if (typeof _gat != "undefined") {
-		callback();
+    callback();
     } else {
         var listener = this;
         setTimeout(function(){
-            listener.onGatLoad(callback);					
+            listener.onGatLoad(callback);
         },100);
     }
 };
@@ -17,10 +17,10 @@ AntiMattr.GoogleAnalytics.onGatLoad = function(callback) {
 AntiMattr.GoogleAnalytics.notifyEvent = function(tracker, category, action, label, value) {
     var event = [tracker + '._trackEvent', category];
     if (typeof label != 'undefined') {
-	    event.push(label);
-	    if (typeof value != 'undefined') {
-		    event.push(value);
-	    }
+      event.push(label);
+      if (typeof value != 'undefined') {
+        event.push(value);
+      }
     }
     _gaq.push(event);
 };
@@ -28,7 +28,7 @@ AntiMattr.GoogleAnalytics.notifyEvent = function(tracker, category, action, labe
 
 if ( _gaq == null || typeof(_gaq) != 'array') { var _gaq = window._gaq = []; }
 
-{% for key, tracker in google_analytics.trackers %}
+{% for key, tracker in google_analytics.trackers -%}
     _gaq.push(['{{ tracker.name }}._setAccount', '{{ tracker.accountId }}']);
 
     {% if tracker.domain %}
@@ -45,33 +45,33 @@ if ( _gaq == null || typeof(_gaq) != 'array') { var _gaq = window._gaq = []; }
         {% else %}
             _gaq.push(['{{ tracker.name }}._setAllowHash', false ]);
         {% endif %}
-    {% endif %}
+    {% endif -%}
 
     {% if google_analytics.hasCustomVariables %}
         {% for customVariable in google_analytics.customVariables %}
             _gaq.push(['{{ tracker.name }}._setCustomVar', {{ customVariable.index }}, '{{ customVariable.name }}', '{{ customVariable.value }}', {{ customVariable.scope }}]);
         {% endfor %}
-    {% endif %}
+    {% endif -%}
 
     {% if google_analytics.hasPageViewQueue %}
         {% for pageView in google_analytics.pageViewQueue %}
             _gaq.push(['{{ tracker.name }}._trackPageview', '{{ pageView }}']);
         {% endfor %}
-    {% endif %}
+    {% endif -%}
 
     {% if google_analytics.hasCustomPageView %}
         _gaq.push(['{{ tracker.name }}._trackPageview', '{{ google_analytics.getCustomPageView() | raw }}']);
-    {% else %}
+    {% else -%}
         if (window.location.hash) {
             _gaq.push(['{{ tracker.name }}._trackPageview', '{{ google_analytics.getRequestUri() | raw }}'+window.location.hash]);
         } else {
             _gaq.push(['{{ tracker.name }}._trackPageview', '{{ google_analytics.getRequestUri() | raw }}']);
         }
-    {% endif %}
+    {% endif -%}
 
     {% if google_analytics.getTrackPageLoadTime(key) %}
-        _gaq.push(['{{ tracker.name }}._trackPageLoadTime']);
-    {% endif %}
+    _gaq.push(['{{ tracker.name }}._trackPageLoadTime']);
+    {% endif -%}
 
     {% if google_analytics.isTransactionValid %}
         {% set transaction = google_analytics.transaction %}
@@ -97,11 +97,11 @@ if ( _gaq == null || typeof(_gaq) != 'array') { var _gaq = window._gaq = []; }
                     '{{ item.quantity | escape('js') }}' // quantity required
                 ]);
             {% endfor %}
-        {% endif %}
+        {% endif -%}
 
         _gaq.push(['{{ tracker.name }}._trackTrans']);
 
-    {% endif %}
+    {% endif -%}
     
     {% if google_analytics.hasEventQueue %}
         AntiMattr.GoogleAnalytics.onGatLoad(function() {
@@ -109,7 +109,7 @@ if ( _gaq == null || typeof(_gaq) != 'array') { var _gaq = window._gaq = []; }
             AntiMattr.GoogleAnalytics.notifyEvent('{{ tracker.name }}', '{{ event.category }}','{{ event.action }}','{{ event.label }}','{{ event.value }}');
         {% endfor %}
         });
-    {% endif %}
+    {% endif -%}
 
 {% endfor %}
 
